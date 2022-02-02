@@ -1,0 +1,9 @@
+{
+    "extends": ["airbnb", "airbnb/hooks", "prettier"],
+    "rules": {
+        "react/react-in-jsx-scope": 0,
+        "react/jsx-filename-extension": 0,
+        "react/style-prop-object": 0,
+        "no-use-before-define": 0
+    }
+}
