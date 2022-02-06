@@ -2,6 +2,14 @@ import { useContext, useState } from "react";
 import { TextInput, View, Button, StyleSheet } from "react-native";
 import { PomodoroSettingsContext } from "../context/pomodoroSettingsContext";
 import { ThemeContext } from "../context/theme";
+import ThemeData from "../utils/theme/theme";
+
+export interface SetTimerObject {
+    work: number;
+    short: number;
+    long: number;
+    active: string;
+}
 
 function SetPomodoro() {
     /* eslint-disable no-unused-vars */
@@ -24,25 +32,23 @@ function SetPomodoro() {
         setWorkInput(input);
         setNewTimer({
             ...newTimer,
-            work: parseInt(workInput),
+            work: +input,
         });
     };
     const handleShortChange = (input: string) => {
         setShortInput(input);
-        setNewTimer({
-            ...newTimer,
-            short: parseInt(shortInput),
-        });
     };
     const handleLongChange = (input: string) => {
         setLongInput(input);
-        setNewTimer({
-            ...newTimer,
-            long: parseInt(longInput),
-        });
     };
 
     const handleSubmit = () => {
+        setNewTimer({
+            work: parseInt(workInput),
+            short: parseInt(shortInput),
+            long: parseInt(longInput),
+            active: "work",
+        });
         updateExecute(newTimer);
     };
 
@@ -100,8 +106,9 @@ const styles = StyleSheet.create((theme) => ({
         borderColor: "#ccc",
         // borderRadius: 100,
         // marginRight: 10,
-        // textAlign: "center",
-        // fontSize: 50,
+        textAlign: "center",
+        fontSize: 20,
+        color: theme.accentColor,
     },
     formContainer: {
         textAlign: "center",

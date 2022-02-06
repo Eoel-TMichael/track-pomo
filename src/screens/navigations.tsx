@@ -2,7 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useContext } from "react";
 import Home from "./Home";
-import SetPomodoro from "../components/SetPomodoro";
+import Settings from "./Settings";
 import { ThemeContext } from "../context/theme";
 
 const Drawer = createDrawerNavigator();
@@ -21,7 +21,7 @@ export default function MainNavigation() {
                 }}
             >
                 <Drawer.Screen name="Home" component={Home} />
-                <Drawer.Screen name="Tracks" component={SetPomodoro} />
+                <Drawer.Screen name="Settings" component={Settings} />
             </Drawer.Navigator>
         </NavigationContainer>
     );

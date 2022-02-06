@@ -1,14 +1,20 @@
 import { useState, createContext } from "react";
+import { SetTimerObject } from "../components/SetPomodoro";
 
 export const PomodoroSettingsContext = createContext();
 // export const context = React.createContext();
 
 function PomodoroSettingsContextProvider({ children }) {
     const [pomodoro, setPomodoro] = useState(0);
-    const [executing, setExecuting] = useState({});
+    const [executing, setExecuting] = useState({
+        work: 1,
+        short: 5,
+        long: 15,
+        active: "work",
+    });
     const [startAnimate, setStartAnimate] = useState(false);
 
-    const setCurrentTimer = (activeState) => {
+    const setCurrentTimer = (activeState: string) => {
         updateExecute({
             ...executing,
             active: activeState,
@@ -24,6 +30,11 @@ function PomodoroSettingsContextProvider({ children }) {
     function pauseTimer() {
         setStartAnimate(false);
     }
+
+    function toggleAnimation() {
+        setStartAnimate(!startAnimate);
+    }
+
     // pass time to counter
     const childrenText = ({ remainingTime }) => {
         const minutes = Math.floor(remainingTime / 60);
@@ -38,12 +49,13 @@ function PomodoroSettingsContextProvider({ children }) {
         setPomodoro(0);
     };
 
-    const updateExecute = (updatedSettings) => {
+    const updateExecute = (updatedSettings: SetTimerObject) => {
         setExecuting(updatedSettings);
         setTimerTime(updatedSettings);
     };
 
-    const setTimerTime = (evaluate) => {
+    const setTimerTime = (evaluate: SetTimerObject) => {
+        console.log("EVALUATE " + evaluate.active);
         switch (evaluate.active) {
             case "work":
                 setPomodoro(evaluate.work);
@@ -60,7 +72,7 @@ function PomodoroSettingsContextProvider({ children }) {
         }
     };
 
-    function stopAimate() {
+    function stopAnimate() {
         setStartAnimate(false);
     }
 
@@ -76,7 +88,8 @@ function PomodoroSettingsContextProvider({ children }) {
                 childrenText,
                 SettingsBtn,
                 setCurrentTimer,
-                stopAimate,
+                stopAnimate,
+                toggleAnimation,
             }}
         >
             {children}

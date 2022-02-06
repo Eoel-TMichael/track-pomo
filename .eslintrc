@@ -18,6 +18,7 @@
         "react/prop-types": 1,
         "react/jsx-no-constructed-context-values": 1,
         "react-hooks/exhaustive-deps": 1,
-        "import/no-unresolved": 0
+        "import/no-unresolved": 0,
+        "prefer-template": 0
     }
 }
