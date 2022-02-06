@@ -1,14 +1,23 @@
 {
-    "extends": ["airbnb", "airbnb/hooks", "prettier"],
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+        "airbnb",
+        "airbnb/hooks",
+        "prettier",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "plugins": ["@typescript-eslint"],
     "rules": {
         "react/react-in-jsx-scope": 0,
         "react/jsx-filename-extension": 0,
         "react/style-prop-object": 0,
         "no-use-before-define": 0,
         "radix": 1,
+        "import/extensions": 0,
         "react/function-component-definition": 1,
         "react/prop-types": 1,
         "react/jsx-no-constructed-context-values": 1,
-        "react-hooks/exhaustive-deps": 1
+        "react-hooks/exhaustive-deps": 1,
+        "import/no-unresolved": 0
     }
 }

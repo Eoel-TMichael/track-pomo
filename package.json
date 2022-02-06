@@ -16,6 +16,8 @@
         "test-all": "yarn check-format && yarn check-lint && yarn check-types"
     },
     "dependencies": {
+        "@react-navigation/drawer": "^6.3.0",
+        "@react-navigation/native": "^6.0.8",
         "expo": "~44.0.0",
         "expo-constants": "~13.0.1",
         "expo-status-bar": "~1.2.0",
@@ -24,6 +26,10 @@
         "react-dom": "17.0.1",
         "react-native": "0.64.3",
         "react-native-countdown-circle-timer": "^3.0.8",
+        "react-native-gesture-handler": "~2.1.0",
+        "react-native-reanimated": "~2.3.1",
+        "react-native-safe-area-context": "3.3.2",
+        "react-native-screens": "~3.10.1",
         "react-native-svg": "^12.1.1",
         "react-native-web": "0.17.1"
     },
@@ -31,6 +37,8 @@
         "@babel/core": "^7.12.9",
         "@types/react": "~17.0.21",
         "@types/react-native": "~0.64.12",
+        "@typescript-eslint/eslint-plugin": "^5.10.2",
+        "@typescript-eslint/parser": "^5.10.2",
         "eslint": "^8.2.0",
         "eslint-config-airbnb": "19.0.4",
         "eslint-config-prettier": "^8.3.0",

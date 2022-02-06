@@ -1,7 +1,12 @@
 import React from "react";
-import { Button } from "react-native";
+import { TouchableOpacity, Text } from "react-native";
 
 function CustomButton({ title, activeClass, _callback }) {
-    return <Button style={activeClass} onPress={_callback} title={title} />;
+    return (
+        <TouchableOpacity style={activeClass} onPress={_callback}>
+            <Text>{title}</Text>
+        </TouchableOpacity>
+    );
 }
+
 export default CustomButton;
