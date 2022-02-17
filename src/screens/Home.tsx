@@ -1,137 +1,69 @@
 import { useEffect, useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
+import Svg, { Path } from "react-native-svg";
 import { PomodoroSettingsContext } from "../context/pomodoroSettingsContext";
 import { ThemeContext } from "../context/theme";
 import { SingleTheme } from "../utils/theme/theme";
+import PomodoroTimer from "../components/Timer";
 
-function Home() {
-    const {
-        pomodoro,
-        executing,
-        startAnimate,
-        childrenText,
-        startTimer,
-        pauseTimer,
-        updateExecute,
-        setCurrentTimer,
-        SettingsBtn,
-        stopAnimate,
-        toggleAnimation,
-    } = useContext(PomodoroSettingsContext);
+function Home({ navigation }) {
+    const { pomodoro, executing, updateExecute } = useContext(
+        PomodoroSettingsContext
+    );
     const { themeData } = useContext(ThemeContext);
-
-    useEffect(() => {
-        updateExecute(executing);
-    }, [executing, startAnimate]);
-
-    const children = ({ remainingTime }) => {
-        const minutes = Math.floor(remainingTime / 60);
-        const seconds = remainingTime % 60;
-
-        return `${minutes}:${seconds}`;
-    };
 
     return (
         <View style={styles(themeData).container}>
-            <TouchableOpacity onPress={toggleAnimation}>
-                <CountdownCircleTimer
-                    key={pomodoro}
-                    isPlaying={startAnimate}
-                    duration={pomodoro * 60}
-                    colors={[themeData.secondaryColor]}
-                    strokeWidth={10}
-                    rotation="counterclockwise"
-                    size={220}
-                    trailColor={themeData.secondaryAccent}
-                    onComplete={() => {
-                        stopAnimate();
-                    }}
+            <View style={styles(themeData).helper}>
+                <Svg
+                    width="67"
+                    height="70"
+                    viewBox="0 0 67 70"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                 >
-                    {({ remainingTime }) => (
-                        <View style={styles(themeData).row}>
-                            <Text style={styles(themeData).subText}>
-                                {executing.active}
-                            </Text>
+                    <Path
+                        d="M9.49991 69C31 57 38.0545 29.3066 20.0006 20.5C-0.499926 10.5 -4.00005 30.5 9.49999 37.5C33.7222 50.0596 60 28.5 60 7.5"
+                        stroke={themeData.secondaryAccent}
+                    />
+                    <Path
+                        d="M60.6357 1.03377L64.8491 10.5336L54.5153 9.43261L60.6357 1.03377Z"
+                        fill={themeData.secondaryAccent}
+                    />
+                </Svg>
+                <Text style={styles(themeData).helperText}>
+                    Hello, Press here to set custom pomodoro time
+                </Text>
+            </View>
 
-                            <Text style={styles(themeData).text}>
-                                {remainingTime}
-                            </Text>
-                        </View>
-                    )}
-                </CountdownCircleTimer>
-            </TouchableOpacity>
+            <PomodoroTimer
+                minute={pomodoro}
+                navigation={navigation}
+                execute={executing}
+                updateExecute={updateExecute}
+                secondaryColor={themeData.secondaryColor}
+                accentColor={themeData.accentColor}
+            />
         </View>
     );
 }
 
 const styles = StyleSheet.create((theme: SingleTheme) => ({
     container: {
-        paddingTop: 5,
-        color: theme.accentColor,
-        display: "flex",
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
         backgroundColor: theme.primaryColor,
     },
-    row: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+    helper: {
+        position: "absolute",
+        top: 0,
+        right: 30,
+        alignItems: "flex-end",
     },
-    text: {
-        fontSize: 65,
-        fontWeight: "bold",
-        color: theme.accentColor,
-        marginBottom: 5,
-    },
-    subText: {
-        fontSize: 16,
-        color: theme.accentColor,
-        marginBottom: 5,
-    },
-    active: {
-        padding: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        borderRadius: 20,
-        color: theme.accentColor,
-    },
-    labels: {
-        flexDirection: "row",
-        display: "flex",
-        textTransform: "uppercase",
-        fontSize: 15,
-        padding: 0.1,
-        margin: 10,
-        borderRadius: 20,
-    },
-    activeLabel: {
-        padding: 10,
-        color: theme.accentColor,
-        backgroundColor: theme.secondaryAccent,
-    },
-    timerContainer: {
-        display: "flex",
-        flex: 1 / 2,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    timeWrapper: {
-        display: "flex",
-        flex: 1 / 2,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    CustomButtonWrapper: {
-        display: "flex",
-        alignItems: "center",
-        padding: 6,
-        flexDirection: "row",
-        width: "60%",
-        justifyContent: "space-evenly",
+    helperText: {
+        fontFamily: "Caveat",
+        fontSize: 20,
+        color: theme.secondaryAccent,
+        transform: [{ rotate: "10deg" }],
     },
 }));
 

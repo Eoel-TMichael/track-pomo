@@ -1,20 +1,26 @@
-import { useState, createContext } from "react";
-import { SetTimerObject } from "../components/SetPomodoro";
+import { useState, createContext, useMemo } from "react";
+import { CommonActions } from "@react-navigation/native";
+import * as ScreenOrientation from "expo-screen-orientation";
 
-export const PomodoroSettingsContext = createContext();
-// export const context = React.createContext();
+interface TimeFormat {
+    work: number;
+    short: number;
+    long: number;
+    active: string;
+}
+
+export const PomodoroSettingsContext = createContext({});
 
 function PomodoroSettingsContextProvider({ children }) {
-    const [pomodoro, setPomodoro] = useState(0);
+    const [pomodoro, setPomodoro] = useState(25);
     const [executing, setExecuting] = useState({
-        work: 1,
+        work: 25,
         short: 5,
         long: 15,
         active: "work",
     });
-    const [startAnimate, setStartAnimate] = useState(false);
 
-    const setCurrentTimer = (activeState: string) => {
+    const setCurrentTimer = (activeState: string): void => {
         updateExecute({
             ...executing,
             active: activeState,
@@ -22,40 +28,40 @@ function PomodoroSettingsContextProvider({ children }) {
         setTimerTime(executing);
     };
 
-    // start animation fn
-    function startTimer() {
-        setStartAnimate(true);
-    }
-    // pause animation fn
-    function pauseTimer() {
-        setStartAnimate(false);
-    }
-
-    function toggleAnimation() {
-        setStartAnimate(!startAnimate);
-    }
-
-    // pass time to counter
-    const childrenText = ({ remainingTime }) => {
-        const minutes = Math.floor(remainingTime / 60);
-        const seconds = remainingTime % 60;
-
-        return `${minutes}:${seconds}`;
-    };
-
-    // clear session storage
-    const SettingsBtn = () => {
-        setExecuting({});
-        setPomodoro(0);
-    };
-
-    const updateExecute = (updatedSettings: SetTimerObject) => {
+    const updateExecute = (updatedSettings: TimeFormat): void => {
         setExecuting(updatedSettings);
         setTimerTime(updatedSettings);
     };
 
-    const setTimerTime = (evaluate: SetTimerObject) => {
-        console.log("EVALUATE " + evaluate.active);
+    async function changeScreenOrientation(): Promise<void> {
+        const orientation = await ScreenOrientation.getOrientationAsync();
+        if (orientation !== ScreenOrientation.Orientation.LANDSCAPE_RIGHT) {
+            await ScreenOrientation.lockAsync(
+                ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
+            );
+        } else {
+            await ScreenOrientation.lockAsync(
+                ScreenOrientation.OrientationLock.PORTRAIT_UP
+            );
+        }
+    }
+
+    const handleModes = (pressedBtn: string, navigation): void => {
+        timer(pressedBtn);
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    {
+                        name: "Home",
+                        params: { min: pomodoro, active: executing.active },
+                    },
+                ],
+            })
+        );
+    };
+
+    const setTimerTime = (evaluate: TimeFormat) => {
         switch (evaluate.active) {
             case "work":
                 setPomodoro(evaluate.work);
@@ -72,25 +78,40 @@ function PomodoroSettingsContextProvider({ children }) {
         }
     };
 
-    function stopAnimate() {
-        setStartAnimate(false);
-    }
+    const timer = (active: string): void => {
+        switch (active) {
+            case "work":
+                setPomodoro(executing.work);
+                updateExecute({ ...executing, active });
+                break;
+            case "short":
+                setPomodoro(executing.short);
+                updateExecute({ ...executing, active });
+                break;
+            case "long":
+                setPomodoro(executing.long);
+                updateExecute({ ...executing, active });
+                break;
+            default:
+                setPomodoro(0);
+                break;
+        }
+    };
 
     return (
         <PomodoroSettingsContext.Provider
-            value={{
-                pomodoro,
-                executing,
-                updateExecute,
-                startAnimate,
-                startTimer,
-                pauseTimer,
-                childrenText,
-                SettingsBtn,
-                setCurrentTimer,
-                stopAnimate,
-                toggleAnimation,
-            }}
+            value={useMemo(
+                () => ({
+                    pomodoro,
+                    executing,
+                    updateExecute,
+                    setCurrentTimer,
+                    changeScreenOrientation,
+                    timer,
+                    handleModes,
+                }),
+                [pomodoro]
+            )}
         >
             {children}
         </PomodoroSettingsContext.Provider>

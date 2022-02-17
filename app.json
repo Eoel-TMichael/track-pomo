@@ -15,13 +15,16 @@
         },
         "assetBundlePatterns": ["**/*"],
         "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
+            "requireFullScreen": true
         },
         "android": {
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#FFFFFF"
-            }
+            },
+            "permissions": ["MOTION"],
+            "package": "com.joelmeles.track_pomo"
         },
         "web": {
             "favicon": "./assets/favicon.png"

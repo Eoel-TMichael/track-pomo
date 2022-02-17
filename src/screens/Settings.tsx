@@ -1,43 +1,49 @@
-import { useState, useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { useContext } from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import SetPomodoro from "../components/SetPomodoro";
 import { ThemeContext } from "../context/theme";
 import { SingleTheme } from "../utils/theme/theme";
 
-export default function Settigs() {
+export default function Settigs({ navigation }) {
     const { themeData, themes, getTheme, updateTheme } =
         useContext(ThemeContext);
     return (
         <View style={styles(themeData).container}>
-            <Text style={styles(themeData).text}>Settings</Text>
-            <View style={styles(themeData).separator} />
-            <Text style={styles(themeData).text}>Set Pomodoro</Text>
-            <View style={styles(themeData).separator} />
-            <SetPomodoro />
-            <Text style={styles(themeData).text}>Themes</Text>
-            <View style={styles(themeData).separator} />
-            <View style={styles(themeData).themeContainer}>
-                {themes.map((theme) => (
-                    <TouchableOpacity
-                        onPress={() => updateTheme(theme)}
-                        key={theme}
-                    >
-                        <View style={styles(getTheme(theme)).bgColor} />
-                    </TouchableOpacity>
-                ))}
-            </View>
+            <ScrollView>
+                <Text style={styles(themeData).header}>Settings</Text>
+                <View style={styles(themeData).separator} />
+                <Text style={styles(themeData).text}>Set Pomodoro</Text>
+                <View style={styles(themeData).separator} />
+                <SetPomodoro navigation={navigation} />
+                <Text style={styles(themeData).text}>Themes</Text>
+                <View style={styles(themeData).separator} />
+                <View style={styles(themeData).themeContainer}>
+                    {themes.map((theme) => (
+                        <TouchableOpacity
+                            onPress={() => updateTheme(theme)}
+                            key={theme}
+                        >
+                            <View style={styles(getTheme(theme)).bgColor} />
+                        </TouchableOpacity>
+                    ))}
+                </View>
+            </ScrollView>
         </View>
     );
 }
 
 const styles = StyleSheet.create((theme: SingleTheme) => ({
     container: {
-        display: "flex",
         flex: 1,
-        alignItems: "flex-start",
         padding: 20,
         backgroundColor: theme.primaryColor,
+    },
+    header: {
+        fontSize: 36,
+        color: theme.secondaryColor,
+        marginBottom: 5,
+        alignSelf: "center",
     },
     text: {
         fontSize: 36,
@@ -48,7 +54,7 @@ const styles = StyleSheet.create((theme: SingleTheme) => ({
         borderWidth: 0.3,
         borderColor: theme.secondaryAccent,
         width: "100%",
-        marginBottom: 10,
+        marginBottom: 20,
         marginTop: 10,
     },
     themeContainer: {
