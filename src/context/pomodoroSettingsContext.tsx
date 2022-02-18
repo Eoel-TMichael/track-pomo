@@ -1,6 +1,7 @@
 import { useState, createContext, useMemo } from "react";
 import { CommonActions } from "@react-navigation/native";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { Audio } from "expo-av";
 
 interface TimeFormat {
     work: number;
@@ -18,6 +19,14 @@ function PomodoroSettingsContextProvider({ children }) {
         short: 5,
         long: 15,
         active: "work",
+    });
+    // TODO with this date we can make a graph for each day!
+    const [pomodoroIteration, setPomodoroIteration] = useState({
+        work: 0,
+        short: 0,
+        long: 0,
+        date: null,
+        executing,
     });
 
     const setCurrentTimer = (activeState: string): void => {
@@ -46,8 +55,17 @@ function PomodoroSettingsContextProvider({ children }) {
         }
     }
 
+    async function playSound() {
+        const { sound } = await Audio.Sound.createAsync(
+            require("../../assets/music/bell.mp3")
+        );
+
+        await sound.playAsync();
+    }
+
     const handleModes = (pressedBtn: string, navigation): void => {
         timer(pressedBtn);
+        console.log("HANDLE BTN" + pressedBtn);
         navigation.dispatch(
             CommonActions.reset({
                 index: 1,
@@ -78,18 +96,44 @@ function PomodoroSettingsContextProvider({ children }) {
         }
     };
 
-    const timer = (active: string): void => {
+    const pomodoroLogic = (active: stirng): void => {
         switch (active) {
             case "work":
+                setPomodoro(executing.short);
+                break;
+            case "short":
+                setPomodoro(executing.long);
+                break;
+            case "long":
                 setPomodoro(executing.work);
+                break;
+            default:
+                setPomodoro(0);
+                break;
+        }
+    };
+
+    const timer = (active: string): void => {
+        console.log("TIMER" + active);
+        switch (active) {
+            case "work":
+                setPomodoroIteration({ ...pomodoroIteration, work: work + 1 });
                 updateExecute({ ...executing, active });
                 break;
             case "short":
-                setPomodoro(executing.short);
+                setPomodoroIteration({
+                    ...pomodoroIteration,
+                    short: short + 1,
+                });
+
                 updateExecute({ ...executing, active });
                 break;
             case "long":
-                setPomodoro(executing.long);
+                setPomodoroIteration({
+                    ...pomodoroIteration,
+                    long: long + 1,
+                });
+
                 updateExecute({ ...executing, active });
                 break;
             default:
@@ -109,6 +153,9 @@ function PomodoroSettingsContextProvider({ children }) {
                     changeScreenOrientation,
                     timer,
                     handleModes,
+                    playSound,
+                    pomodoroLogic,
+                    setTimerTime,
                 }),
                 [pomodoro]
             )}

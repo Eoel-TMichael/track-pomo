@@ -12,6 +12,7 @@ function Home({ navigation }) {
     );
     const { themeData } = useContext(ThemeContext);
 
+    console.log("ACTIVE HOME" + executing.active);
     return (
         <View style={styles(themeData).container}>
             <View style={styles(themeData).helper}>

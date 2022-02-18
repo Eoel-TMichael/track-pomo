@@ -16,13 +16,11 @@ export default function PomodoroTimer({
     secondaryColor,
     accentColor,
     navigation,
-    execute,
 }: PomodoroTimerProps) {
     const [started, setStart] = useState(false);
     const [min, setMin] = useState(minute);
-    const { timer, handleModes, changeScreenOrientation } = useContext(
-        PomodoroSettingsContext
-    );
+    const { handleModes, changeScreenOrientation, playSound, executing } =
+        useContext(PomodoroSettingsContext);
     const { themeData } = useContext(ThemeContext);
 
     const controlTimer = (resume, pause) => {
@@ -44,6 +42,7 @@ export default function PomodoroTimer({
             reset();
         }
     };
+    console.log(executing.active);
 
     return (
         <View style={styles(themeData).container}>
@@ -54,7 +53,7 @@ export default function PomodoroTimer({
                 >
                     <Text
                         style={
-                            execute.active === "work"
+                            executing.active === "work"
                                 ? styles(themeData).activeModeText
                                 : styles(themeData).modeText
                         }
@@ -68,7 +67,7 @@ export default function PomodoroTimer({
                 >
                     <Text
                         style={
-                            execute.active === "short"
+                            executing.active === "short"
                                 ? styles(themeData).activeModeText
                                 : styles(themeData).modeText
                         }
@@ -82,7 +81,7 @@ export default function PomodoroTimer({
                 >
                     <Text
                         style={
-                            execute.active === "long"
+                            executing.active === "long"
                                 ? styles(themeData).activeModeText
                                 : styles(themeData).modeText
                         }
@@ -101,18 +100,17 @@ export default function PomodoroTimer({
                     {
                         time: 0,
                         callback: () => {
-                            // TODO use sound and Notifications to notify them
-                            switch (execute.active) {
+                            // TODO use and Notifications to notify them
+                            playSound();
+                            switch (executing.active) {
                                 case "work":
                                     handleModes("short", navigation);
                                     break;
                                 case "short":
                                     handleModes("long", navigation);
-
                                     break;
                                 case "long":
                                     handleModes("work", navigation);
-
                                     break;
                                 default:
                                     break;
