@@ -117,13 +117,12 @@ function PomodoroSettingsContextProvider({ children }) {
         console.log("TIMER" + active);
         switch (active) {
             case "work":
-                setPomodoroIteration({ ...pomodoroIteration, work: work + 1 });
+                setPomodoroIteration({ ...pomodoroIteration });
                 updateExecute({ ...executing, active });
                 break;
             case "short":
                 setPomodoroIteration({
                     ...pomodoroIteration,
-                    short: short + 1,
                 });
 
                 updateExecute({ ...executing, active });
@@ -131,7 +130,6 @@ function PomodoroSettingsContextProvider({ children }) {
             case "long":
                 setPomodoroIteration({
                     ...pomodoroIteration,
-                    long: long + 1,
                 });
 
                 updateExecute({ ...executing, active });
